@@ -36,7 +36,7 @@ public class EntradaResource {
     @POST
 	@Operation(summary = "Adiciona uma nova entrada",
                description = "Adiciona uma nova entrada")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response addEntrada(EntradaDTO entradaRequest) {
         Entrada entrada = entradaService.addEntrada(entradaRequest);
         return Response.ok(entrada).status(Response.Status.CREATED).build();
@@ -45,14 +45,14 @@ public class EntradaResource {
     @GET
 	@Operation(summary = "Listar todos as entradas",
                description = "Retorna uma lista de todas as entradas")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response listAllEntrada() {
         return Response.ok(entradaService.listAll()).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response updateEntrada(@PathParam("id") Long id, EntradaDTO entradaRequest) {
         Optional<Entrada> updatedEntrada = entradaService.updateEntrada(id, entradaRequest);
         return updatedEntrada.map(entrada -> Response.ok(entrada).build())
@@ -61,7 +61,7 @@ public class EntradaResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response deleteEntrada(@PathParam("id") Long id) {
         boolean deleted = entradaService.deleteEntrada(id);
         if (deleted) {
@@ -73,7 +73,7 @@ public class EntradaResource {
 
     @GET
     @Path("/search/dataentrada/{dataEntrada}")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response findByDate(@PathParam("dataEntrada") String dataEntrada) {
 
         try {

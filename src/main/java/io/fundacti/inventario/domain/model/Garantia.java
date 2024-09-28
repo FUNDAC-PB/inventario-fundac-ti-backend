@@ -7,13 +7,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "Garantia")
 @Table(name = "garantia")
 public class Garantia extends PanacheEntityBase {
 
@@ -21,6 +23,7 @@ public class Garantia extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "garantiaid")
     private Long id;
 
     @Column(name = "dataInicio", nullable = false)
@@ -34,7 +37,8 @@ public class Garantia extends PanacheEntityBase {
     @Column(name = "detalhes")
     private String detalhes;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inventarioid")
     private Inventario inventario;
 
     // Constructors
@@ -60,7 +64,8 @@ public class Garantia extends PanacheEntityBase {
     public Inventario getInventario() {
         return inventario;
     }
-
+    
+    // Referencia bidirecional
     public void setInventario(Inventario inventario) {
         this.inventario = inventario;
     }
@@ -88,7 +93,6 @@ public class Garantia extends PanacheEntityBase {
     public void setDetalhes(String detalhes) {
         this.detalhes = detalhes;
     }
-
 
     // hashCode and equals methods
 

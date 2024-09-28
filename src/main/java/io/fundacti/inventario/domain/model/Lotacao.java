@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "Lotacao")
 @Table(name = "lotacao")
 public class Lotacao extends PanacheEntityBase {
 
@@ -16,6 +16,7 @@ public class Lotacao extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lotacaoid")
     private Long id;
 
     @Column(name = "nome")

@@ -34,7 +34,7 @@ public class InventarioResource {
     @POST
 	@Operation(summary = "Adiciona um novo item",
                description = "Adiciona um novo item ao inventário")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response addItem(InventarioDTO itemRequest) {
         Inventario inventario = inventarioService.addItem(itemRequest);
         return Response.status(Response.Status.CREATED).entity(inventario).build();
@@ -43,7 +43,7 @@ public class InventarioResource {
     @GET
 	@Operation(summary = "Listar todos os itens",
                description = "Retorna uma lista de todos os itens do inventário")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response listAllInventario() {
         List<Inventario> inventarios = inventarioService.listAll();
         return Response.ok(inventarios).build();
@@ -53,7 +53,7 @@ public class InventarioResource {
 	@Operation(summary = "Atualiza um item",
                description = "Atualiza um item ao inventário")
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response updateItem(@PathParam("id") Long id, InventarioDTO itemRequest) {
         Optional<Inventario> updatedInventario = inventarioService.updateItem(id, itemRequest);
         return updatedInventario.map(inventario -> Response.ok(inventario).build())
@@ -64,7 +64,7 @@ public class InventarioResource {
 	@Operation(summary = "Deleta um item",
                description = "Deleta um item ao inventário")
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response deleteItem(@PathParam("id") Long id) {
         boolean deleted = inventarioService.deleteItem(id);
         return deleted ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build();
@@ -74,7 +74,7 @@ public class InventarioResource {
 	@Operation(summary = "Buscar item por nome",
                description = "Busca um item por nome no inventário")
     @Path("/search/nome/{nome}")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response findByNome(@PathParam("nome") String nome) {
         return Response.ok(inventarioService.findByNome(nome)).build();
     }
@@ -83,7 +83,7 @@ public class InventarioResource {
 	@Operation(summary = "Buscar item por tipo",
                description = "Busca um item por tipo no inventário")
     @Path("/search/tipo/{tipo}")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response findByTipo(@PathParam("tipo") String tipo) {
         return Response.ok(inventarioService.findByTipo(tipo)).build();
     }

@@ -33,7 +33,7 @@ public class LotacaoResource {
     @POST
 	@Operation(summary = "Adiciona uma nova lotacao",
                description = "Adiciona uma nova lotacao")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response addLotacao(LotacaoDTO lotacaoRequest) {
         Lotacao lotacao = lotacaoService.addLotacao(lotacaoRequest);
         return Response.ok(lotacao).status(Response.Status.CREATED).build();
@@ -42,14 +42,14 @@ public class LotacaoResource {
     @GET
 	@Operation(summary = "Listar todos as lotacoes",
                description = "Retorna uma lista de todas as lotacoes")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response listAll() {
         return Response.ok(lotacaoService.listAll()).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response updateLLotacao(@PathParam("id") Long id, LotacaoDTO lotacaoRequest) {
         Optional<Lotacao> updatedLotacao = lotacaoService.updateLotacao(id, lotacaoRequest);
         return updatedLotacao.map(lotacao -> Response.ok(lotacao).build())
@@ -58,7 +58,7 @@ public class LotacaoResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response deleteLotacao(@PathParam("id") Long id) {
         boolean deleted = lotacaoService.deleteLotacao(id);
         if (deleted) {
@@ -70,7 +70,7 @@ public class LotacaoResource {
  
     @GET
     @Path("/search/lotacao/{nome}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response findByNome(@PathParam("nome") String nome) {
         return Response.ok(lotacaoService.findByNome(nome)).build();
     }

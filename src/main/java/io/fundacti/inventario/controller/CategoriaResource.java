@@ -33,7 +33,7 @@ public class CategoriaResource {
     @POST
 	@Operation(summary = "Adiciona uma nova categoria",
                description = "Adiciona uma nova categoria")
-    @RolesAllowed("user,admin")
+  //  @RolesAllowed("user,admin")
     public Response addCategoria(CategoriaDTO categoriaRequest) {
         Categoria categoria = categoriaService.addCategoria(categoriaRequest);
         return Response.ok(categoria).status(Response.Status.CREATED).build();
@@ -42,14 +42,14 @@ public class CategoriaResource {
     @GET
 	@Operation(summary = "Listar todos as categorias",
                description = "Retorna uma lista de todas as categorias")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response listAll() {
         return Response.ok(categoriaService.listAll()).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response updateCategoria(@PathParam("id") Long id, CategoriaDTO categoriaRequest) {
         Optional<Categoria> updatedCategoria = categoriaService.updateCategoria(id, categoriaRequest);
         return updatedCategoria.map(categoria -> Response.ok(categoria).build())
@@ -58,7 +58,7 @@ public class CategoriaResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response deleteCategoria(@PathParam("id") Long id) {
         boolean deleted = categoriaService.deleteCategoria(id);
         if (deleted) {
@@ -70,7 +70,7 @@ public class CategoriaResource {
 
     @GET
     @Path("/search/categoria/{nome}")
-    @RolesAllowed("user,admin")
+    // @RolesAllowed("user,admin")
     public Response findByNome(@PathParam("nome") String nome) {
         return Response.ok(categoriaService.findByNome(nome)).build();
     }

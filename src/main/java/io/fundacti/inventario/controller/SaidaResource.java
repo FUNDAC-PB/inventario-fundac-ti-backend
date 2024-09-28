@@ -36,7 +36,7 @@ public class SaidaResource {
     @POST
 	@Operation(summary = "Adiciona uma nova saida",
                description = "Adiciona uma nova saida")
-    @RolesAllowed("user,admin")
+  //  @RolesAllowed("user,admin")
     public Response addSaida(SaidaDTO saidaRequest) {
         Saida saida = saidaService.addSaida(saidaRequest);
         return Response.ok(saida).status(Response.Status.CREATED).build();
@@ -45,14 +45,14 @@ public class SaidaResource {
     @GET
 	@Operation(summary = "Listar todos as saidas",
                description = "Retorna uma lista de todas as saidas")
-    @RolesAllowed("user,admin")
+  //  @RolesAllowed("user,admin")
     public Response listAllSaida() {
         return Response.ok(saidaService.listAll()).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+  //  @RolesAllowed("user,admin")
     public Response updateSaida(@PathParam("id") Long id, SaidaDTO saidaRequest) {
         Optional<Saida> updatedSaida = saidaService.updateSaida(id, saidaRequest);
         return updatedSaida.map(saida -> Response.ok(saida).build())
@@ -61,7 +61,7 @@ public class SaidaResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response deleteSaida(@PathParam("id") Long id) {
         boolean deleted = saidaService.deleteSaida(id);
         if (deleted) {
@@ -73,7 +73,7 @@ public class SaidaResource {
 
     @GET
     @Path("/search/datasaida/{dataSaida}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response findByDate(@PathParam("dataSaida") String dataSaida) {
 
         try {

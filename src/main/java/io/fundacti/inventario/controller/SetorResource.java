@@ -33,7 +33,7 @@ public class SetorResource {
     @POST
 	@Operation(summary = "Adiciona um novo setor",
                description = "Adiciona um novo setor")
-    @RolesAllowed("user,admin")
+    //@RolesAllowed("user,admin")
     public Response addSetor(SetorDTO setorRequest) {
         Setor setor = setorService.addSetor(setorRequest);
         return Response.ok(setor).status(Response.Status.CREATED).build();
@@ -42,14 +42,14 @@ public class SetorResource {
     @GET
 	@Operation(summary = "Listar todos os setores",
                description = "Retorna uma lista de todos os setores")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response listAll() {
         return Response.ok(setorService.listAll()).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response updateItem(@PathParam("id") Long id, SetorDTO setorRequest) {
         Optional<Setor> updatedSetor = setorService.updateItem(id, setorRequest);
         return updatedSetor.map(setor -> Response.ok(setor).build())
@@ -58,7 +58,7 @@ public class SetorResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response deleteItem(@PathParam("id") Long id) {
         boolean deleted = setorService.deleteItem(id);
         if (deleted) {
@@ -71,7 +71,7 @@ public class SetorResource {
 
     @GET
     @Path("/search/setor/{nome}")
-    @RolesAllowed("user,admin")
+   // @RolesAllowed("user,admin")
     public Response findByNome(@PathParam("nome") String nome) {
         return Response.ok(setorService.findByNome(nome)).build();
     }
