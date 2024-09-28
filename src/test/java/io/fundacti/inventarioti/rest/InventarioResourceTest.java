@@ -1,17 +1,22 @@
 package io.fundacti.inventarioti.rest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static io.restassured.RestAssured.given;
+import java.util.UUID;
 
+import static org.hamcrest.CoreMatchers.is;
+import org.jboss.logging.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.fundacti.inventario.dto.InventarioDTO;
+import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.response.Response;
+import static io.restassured.RestAssured.given;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 public class InventarioResourceTest {
+
+    private static final Logger LOG = Logger.getLogger(InventarioResourceTest.class);
 
     private Long lotacaoId;
     private Long setorId;
@@ -19,31 +24,33 @@ public class InventarioResourceTest {
 
     @BeforeEach
     public void setup() {
-        lotacaoId = given()
-                .contentType("application/json")
-                .body("{\"nome\": \"Fundac\"}")
-                .when().post("/lotacao")
-                .then()
-                .statusCode(201)
-                .extract().path("id");
+        lotacaoId = createEntity("/api/lotacao", "{\"nome\": \"Fundac\"}");
+        setorId = createEntity("/api/setor", "{\"nome\": \"TI\"}");
+        categoriaId = createEntity("/api/categoria", "{\"nome\": \"Microcomputador portatil\"}");
 
-        setorId = given()
-                .contentType("application/json")
-                .body("{\"nome\": \"TI\"}")
-                .when().post("/setor")
-                .then()
-                .statusCode(201)
-                .extract().path("id");
-
-        categoriaId = given()
-                .contentType("application/json")
-                .body("{\"nome\": \"Microcomputador portatil\"}")
-                .when().post("/categoria")
-                .then()
-                .statusCode(201)
-                .extract().path("id");
+        LOG.infof("LotacaoId: %d, SetorId: %d, CategoriaId: %d", lotacaoId, setorId, categoriaId);
     }
 
+    @Transactional
+    protected Long createEntity(String datapoint, String body) {
+        Integer id = given()
+               .contentType("application/json")
+               .body(body)
+               .when().post(datapoint)
+               .then()
+               .statusCode(201)
+               .extract().path("id");
+
+               if (id == null) {
+                LOG.errorf("Falha ao criar entidades no endpoint %s com body: %s", datapoint, body);
+              } else {
+                LOG.infof("Entidade criada no endpoint %s com ID: %d", datapoint, id);
+              }
+        
+        return id != null ? id.longValue() : null; 
+    }
+
+    @TestTransaction
     @Test
     public void testAddItem() {
         InventarioDTO request = new InventarioDTO();
@@ -53,8 +60,8 @@ public class InventarioResourceTest {
         request.setLotacaoId(lotacaoId);
         request.setSetorId(setorId);
         request.setCategoriaId(categoriaId);
-        request.setPatrimonio("12345");
-        request.setNumeroSerie("67890");
+        request.setPatrimonio(UUID.randomUUID().toString());
+        request.setNumeroSerie(UUID.randomUUID().toString());
 
         given()
           .contentType("application/json")
@@ -68,7 +75,7 @@ public class InventarioResourceTest {
     @Test
     public void testListAllInventario() {
         given()
-          .when().get("/inventario")
+          .when().get("/api/inventario")
           .then()
              .statusCode(200);
     }
