@@ -8,14 +8,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "setores")
+@Entity(name = "Setor")
+@Table(name = "setor")
 public class Setor extends PanacheEntityBase {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "setorid")
     private Long id;
 
     @Column(name = "nome")

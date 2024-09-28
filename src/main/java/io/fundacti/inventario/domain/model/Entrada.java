@@ -7,13 +7,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "Entradas")
 @Table(name = "entradas")
 public class Entrada extends PanacheEntityBase {
 
@@ -21,9 +23,11 @@ public class Entrada extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "entradaid")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inventarioid")
     private Inventario inventario;
 
     @Column(name = "tipoEntrada")
@@ -63,9 +67,13 @@ public class Entrada extends PanacheEntityBase {
     public Inventario getInventario() {
         return inventario;
     }
-
+    
+    // Referencia bidirecional
     public void setInventario(Inventario inventario) {
         this.inventario = inventario;
+        if (inventario != null && !inventario.getEntradas().contains(this)) {
+            inventario.addEntrada(this);
+        }
     }
 
     public String getTipoEntrada() {

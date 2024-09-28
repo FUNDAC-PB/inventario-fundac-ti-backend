@@ -1,15 +1,24 @@
 package io.fundacti.inventario.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "Inventario")
 @Table(name = "inventario")
 public class Inventario extends PanacheEntityBase {
 
@@ -17,6 +26,7 @@ public class Inventario extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "inventarioid")
     private Long id;
 
     @Column(name = "nome")
@@ -28,14 +38,35 @@ public class Inventario extends PanacheEntityBase {
     @Column(name = "tipo")
     private String tipo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lotacaoid")
+    @JsonbTransient
     private Lotacao lotacao;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "setorid")
+    @JsonbTransient
     private Setor setor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoriaid")
+    @JsonbTransient
     private Categoria categoria;
+
+    @OneToOne(mappedBy = "inventario", cascade = CascadeType.ALL,
+              fetch = FetchType.LAZY, orphanRemoval=true)
+    @JsonbTransient
+    private Garantia garantia;
+
+    @OneToMany(mappedBy = "inventario", cascade = CascadeType.ALL,
+              fetch = FetchType.LAZY, orphanRemoval=true)
+    @JsonbTransient
+    private List<Entrada> entradas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "inventario", cascade = CascadeType.ALL,
+              fetch = FetchType.LAZY, orphanRemoval=true)
+    @JsonbTransient
+    private List<Saida> saidas = new ArrayList<>();
 
     @Column(name = "patrimonio")
     private String patrimonio;
@@ -150,4 +181,51 @@ public class Inventario extends PanacheEntityBase {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Garantia getGarantia() {
+        return garantia;
+    }
+
+    // Referencias bidirecionais
+    public void setGarantia(Garantia garantia) {
+        this.garantia = garantia;
+        if (garantia != null) {
+            garantia.setInventario(this);
+        }
+    }
+
+    public List<Entrada> getEntradas() {
+        return entradas;
+    }
+
+    public void setEntrada(List<Entrada> entradas) {
+        this.entradas = entradas;
+        for (Entrada entrada : entradas) {
+            entrada.setInventario(this);
+        }
+    }
+
+    // Entrada unica
+    public void addEntrada(Entrada entrada) {
+        entradas.add(entrada);
+        entrada.setInventario(this);
+    }
+
+    public List<Saida> getSaidas() {
+        return saidas;
+    }
+
+    public void setSaida(List<Saida> saidas) {
+        this.saidas = saidas;
+        for(Saida saida : saidas) {
+           saida.setInventario(this);
+        }
+    }
+
+    // Saida unica
+    public void addSaida(Saida saida) {
+        saidas.add(saida);
+        saida.setInventario(this);
+    }
+
 }
