@@ -38,7 +38,7 @@ public class Saida extends PanacheEntityBase {
     private LocalDate dataSaida;
 
     @Column(name = "quantidade")
-    private Long quantidade;
+    private Integer quantidade;
     
     @Column(name = "termoSaida")
     private String termoSaida;
@@ -91,11 +91,11 @@ public class Saida extends PanacheEntityBase {
         this.dataSaida = dataSaida;
     }
 
-    public Long getQuantidade() {
+    public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Long quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 

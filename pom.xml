@@ -36,6 +36,11 @@
       <artifactId>quarkus-resteasy-jackson</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.18.0</version>
+  </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
@@ -112,6 +117,18 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.4.2</version>
+        <configuration>
+         <archive>
+           <manifest>
+             <mainClass>io.fundacti.inventario.Main</mainClass>
+           </manifest>
+         </archive>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
         <version>${quarkus.platform.version}</version>
@@ -119,12 +136,16 @@
         <executions>
           <execution>
             <goals>
-              <goal>build</goal>
               <goal>generate-code</goal>
               <goal>generate-code-tests</goal>
+              <goal>build</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <goal>build</goal>
+          <packageType>uber-jar</packageType>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -168,15 +189,15 @@
   </build>
   <profiles>
     <profile>
-      <id>native</id>
+      <id>uber-jar</id>
       <activation>
         <property>
-          <name>native</name>
+          <name>uber-jar</name>
         </property>
       </activation>
       <properties>
         <skipITs>false</skipITs>
-        <quarkus.package.type>native</quarkus.package.type>
+        <quarkus.package.type>uber-jar</quarkus.package.type>
       </properties>
     </profile>
   </profiles>

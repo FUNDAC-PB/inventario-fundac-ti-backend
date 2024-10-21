@@ -36,7 +36,7 @@ public class GarantiaResource {
     @POST
 	@Operation(summary = "Adiciona uma nova garantia",
                description = "Adiciona uma nova garantia")
-  //  @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response addGarantia(GarantiaDTO garantiaRequest) {
         Garantia garantia = garantiaService.addGarantia(garantiaRequest);
         return Response.ok(garantia).status(Response.Status.CREATED).build();
@@ -45,14 +45,14 @@ public class GarantiaResource {
     @GET
 	@Operation(summary = "Listar todos as garantias",
                description = "Retorna uma lista de todas as garantias")
-   // @RolesAllowed("user,admin")
+   @RolesAllowed("user,admin")
     public Response listAllGarantia(){
         return Response.ok(garantiaService.listAll()).build();
     }
     
     @PUT
     @Path("/{id}")
-    // @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response updateGarantia(@PathParam("id") Long id, GarantiaDTO garantiaRequest) {
         Optional<Garantia> updatedGarantia = garantiaService.updateGarantia(id, garantiaRequest);
         return updatedGarantia.map(garantia -> Response.ok(garantia).build())
@@ -61,7 +61,7 @@ public class GarantiaResource {
 
     @DELETE
     @Path("/{id}")
-    // @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response deleteGarantia(@PathParam("id") Long id) {
         boolean deleted = garantiaService.deleteGarantia(id);
         if (deleted) {
@@ -73,7 +73,7 @@ public class GarantiaResource {
 
     @GET
     @Path("/search/datagarantia/{dataFim}")
-    // @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response findByDataFim(@PathParam("dataFim") String dataFim) {
          try {
 

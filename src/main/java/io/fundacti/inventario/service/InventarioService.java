@@ -38,7 +38,7 @@ public class InventarioService {
                   inventarioDTO.getLotacaoId(), inventarioDTO.getSetorId(), inventarioDTO.getCategoriaId());
 
         if (inventarioDTO.getLotacaoId() == null || inventarioDTO.getSetorId() == null || inventarioDTO.getCategoriaId() == null) {
-            throw new IllegalArgumentException("IDs de Lotacao, Setor e Categoria são obrigatórios");
+            throw new IllegalArgumentException("IDs de Lotacao, Setor e Categoria são obrigatórios (" + inventarioDTO.getLotacaoId() + inventarioDTO.getSetorId() + inventarioDTO.getCategoriaId() + "}");
         }
         
         Lotacao lotacao = entityManager.find(Lotacao.class, inventarioDTO.getLotacaoId());

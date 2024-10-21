@@ -47,7 +47,7 @@ public class EntradaService {
             throw new IllegalArgumentException("Entidade relacionada ao id não encontrada");
         }
 
-        Entrada entrada = new Entrada(null);
+        Entrada entrada = new Entrada();
         entrada.setTipoEntrada(entradaDTO.getTipoEntrada());
         entrada.setDataEntrada(entradaDTO.getDataEntrada());
         entrada.setQuantidade(entradaDTO.getQuantidade());

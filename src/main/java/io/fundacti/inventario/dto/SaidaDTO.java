@@ -2,8 +2,11 @@ package io.fundacti.inventario.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.smallrye.common.constraint.NotNull;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +24,12 @@ public class SaidaDTO {
     @NotBlank
     private String tipoSaida;
 
-    @NotBlank
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataSaida;
 
-    @NotBlank
-    private Long quantidade;
+    @NotNull
+    private Integer quantidade;
 
     private String termoSaida;
 

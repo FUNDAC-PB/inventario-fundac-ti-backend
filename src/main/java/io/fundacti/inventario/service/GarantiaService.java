@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.jboss.logging.Logger;
 
-import io.fundacti.inventario.repo.GarantiaRepository;
 import io.fundacti.inventario.domain.model.Garantia;
 import io.fundacti.inventario.domain.model.Inventario;
 import io.fundacti.inventario.dto.GarantiaDTO;
+import io.fundacti.inventario.repo.GarantiaRepository;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -62,6 +64,12 @@ public class GarantiaService {
     public List<Garantia> listAll() {
         List<Garantia> garantias = garantiaRepo.listAll();
         LOG.infof("Listando todas as garantias, total: %d", garantias.size());
+        
+        garantias.forEach(garantia -> {
+            // Inicializa o inventario manualmente
+            Hibernate.initialize(garantia.getInventario());
+        });
+        
         return garantias;
     }
 

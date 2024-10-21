@@ -1,61 +1,65 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL
+	email VARCHAR(50) NOT NULL,
+	isactive BOOLEAN NOT NULL,
+	api BOOLEAN NOT NULL,
+    roles VARCHAR(50) NOT NULL,
+	lastTokenDate TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS setor (
-    id SERIAL PRIMARY KEY,
+    setorid SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS lotacao (
-    id SERIAL PRIMARY KEY,
+    lotacaoid SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS categorias (
-    id SERIAL PRIMARY KEY,
+    categoriaid SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS inventario (
-    id SERIAL PRIMARY KEY,
+    inventarioid SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT,
     tipo VARCHAR(50) CHECK (tipo IN ('equipamento', 'mat.consumo', 'outros')),
-    lotacao_id INT REFERENCES lotacao(id),
-    setor_id INT REFERENCES setor(id),
+    lotacaoid INT REFERENCES lotacao(lotacaoid) NOT NULL,
+    setorid INT REFERENCES setor(setorid) NOT NULL,
     patrimonio VARCHAR(100) UNIQUE,
     numero_serie VARCHAR(100) UNIQUE,
     responsavel VARCHAR(100),
-    categoria_id INT REFERENCES categorias(id),
+    categoriaid INT REFERENCES categorias(categoriaid) NOT NULL,
     status VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS entradas (
-    id SERIAL PRIMARY KEY,
-    inventario_id INT REFERENCES inventario(id),
-    tipo_entrada VARCHAR(50) CHECK (tipo_entrada IN ('doacao', 'licitacao')),
-	data_entrada DATE NOT NULL,
+    entradaid SERIAL PRIMARY KEY,
+    inventarioid INT NOT NULL REFERENCES inventario(inventarioid),
+    tipoentrada VARCHAR(50) CHECK (tipoentrada IN ('doacao', 'licitacao')),  -- Corrigido o nome da coluna
+    dataentrada DATE NOT NULL,
     quantidade SMALLINT NOT NULL,
-    termo_recebimento VARCHAR(50) NULL
+    termorecebimento VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS saidas (
-    id SERIAL PRIMARY KEY,
-    inventario_id INT REFERENCES inventario(id),
-	tipo_saida VARCHAR(50) CHECK (tipo_saida IN ('recebimento', 'descarte')),
-    data_saida DATE NOT NULL,
+    saidaid SERIAL PRIMARY KEY,
+    inventarioid INT REFERENCES inventario(inventarioid) NOT NULL,
+	tiposaida VARCHAR(50) CHECK (tiposaida IN ('recebimento', 'descarte')),
+    datasaida DATE NOT NULL,
     quantidade SMALLINT NOT NULL,
-    termo_saida VARCHAR(50) NULL
+    termosaida VARCHAR(50) NULL
 );
 
 CREATE TABLE IF NOT EXISTS garantia (
-    id SERIAL PRIMARY KEY,
-    inventario_id INT REFERENCES inventario(id),
-    data_inicio DATE NOT NULL,
-    data_fim DATE NOT NULL,
+    garantiaid SERIAL PRIMARY KEY,
+    inventarioid INT REFERENCES inventario(inventarioid) NOT NULL,
+    datainicio DATE NOT NULL,
+    datafim DATE NOT NULL,
     detalhes VARCHAR(250) NULL
 );

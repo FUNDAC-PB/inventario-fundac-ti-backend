@@ -1,14 +1,14 @@
 package io.fundacti.inventarioti.rest;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import org.jboss.logging.Logger;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.fundacti.inventario.dto.InventarioDTO;
 import io.fundacti.inventario.dto.SaidaDTO;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
@@ -20,64 +20,36 @@ import jakarta.transaction.Transactional;
 @QuarkusTest
 public class SaidaResourceTest {
 
-    private static final Logger LOG = Logger.getLogger(InventarioResourceTest.class);
+    private static final Logger LOG = Logger.getLogger(SaidaResourceTest.class);
 
-    private Integer inventarioId;
-    private Long quantidade;
-    private Long setorId;
-    private Long categoriaId;
-    private Long lotacaoId;
+    private Long inventarioId;
 
     @BeforeEach
-    public void setup () {
-        lotacaoId = createEntity("/api/lotacao", "{\"nome\": \"Fundac\"}");
+    public void setup() {
+        // Buscar um inventarioId existente no banco
+        inventarioId = getDisponivelId("/api/inventario");
+        assertNotNull(inventarioId, "O ID do inventário não deveria ser nulo, god please.");
 
-        setorId = createEntity("/api/setor","{\"nome\": \"TI\"}");
-
-        categoriaId = createEntity("/api/categoria", "{\"nome\": \"Microcomputador portatil\"}");
-
-        // InventarioDTO temporario para persistencia dos IDs
-        InventarioDTO inventarioDTO = new InventarioDTO();
-        inventarioDTO.setNome("Notebook Daten");
-        inventarioDTO.setDescricao("Descrição do Notebook Daten");
-        inventarioDTO.setTipo("equipamento");
-        inventarioDTO.setPatrimonio(UUID.randomUUID().toString());
-        inventarioDTO.setNumeroSerie(UUID.randomUUID().toString());
-        inventarioDTO.setResponsavel("João");
-        inventarioDTO.setLotacaoId(lotacaoId);
-        inventarioDTO.setSetorId(setorId);
-        inventarioDTO.setCategoriaId(categoriaId);
-        
-        inventarioId = given()
-               .contentType("application/json")
-               .body(inventarioDTO)
-               .when().post("/api/inventario")
-               .then()
-               .statusCode(201)
-               .extract().path("id");
-
-        quantidade = 5L;
-
-        LOG.infof("LotacaoId: %d, SetorId: %d, CategoriaId: %d, Inventario: %d, Quantidade: %d", lotacaoId, setorId, categoriaId, inventarioId, quantidade);
+        LOG.infof("InventarioId: %d", inventarioId);
     }
 
+    // Método que busca o ID disponível no datapoint
     @Transactional
-    protected Long createEntity(String datapoint, String body) {
-        Integer id = given()
+    protected Long getDisponivelId(String datapoint) {
+        List<Integer> ids = given()
                .contentType("application/json")
-               .body(body)
-               .when().post(datapoint)
+               .when().get(datapoint)
                .then()
-               .statusCode(201)
-               .extract().path("id");
+               .statusCode(200)
+               .extract().jsonPath().getList("id", Integer.class);
 
-               if (id == null) {
-                LOG.errorf("Falha ao criar entidades no endpoint %s com body: %s", datapoint, body);
-              } else {
-                LOG.infof("Entidade criada no endpoint %s com ID: %d", datapoint, id);
-              }
-        
-        return id != null ? id.longValue() : null; 
+        if (ids.isEmpty()) {
+            LOG.errorf("Nenhum ID disponível no datapoint: %s", datapoint);
+            return null;
+        } else {
+            LOG.infof("ID encontrado no datapoint %s: %d", datapoint, ids.get(0));
+            return ids.get(0).longValue();
+        }
     }
 
     @TestTransaction
@@ -85,9 +57,10 @@ public class SaidaResourceTest {
     public void testCreateSaida() {
         
         SaidaDTO request = new SaidaDTO();
-        request.setInventarioId(inventarioId.longValue());
+        request.setInventarioId(inventarioId);
         request.setDataSaida(LocalDate.now().plusDays(30));
-        request.setQuantidade(quantidade);
+        request.setTipoSaida("descarte");
+        request.setQuantidade(5);
         request.setTermoSaida("Dado baixa");
 
         given()
@@ -96,7 +69,8 @@ public class SaidaResourceTest {
           .when().post("/api/saida")
           .then()
              .statusCode(201)
-             .body("inventario", is(inventarioId.intValue()));
+             .body("termoSaida", is("Dado baixa"));
+             
     }
 
     @Test

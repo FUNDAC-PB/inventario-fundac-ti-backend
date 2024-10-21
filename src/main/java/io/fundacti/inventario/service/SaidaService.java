@@ -31,7 +31,7 @@ public class SaidaService {
 
     @Transactional
     public Saida addSaida(SaidaDTO saidaDTO) {
-        Saida saida = new Saida(null);
+        Saida saida = new Saida();
         saida.setTipoSaida(saidaDTO.getTipoSaida());
         saida.setDataSaida(saidaDTO.getDataSaida());
         saida.setQuantidade(saidaDTO.getQuantidade());

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +29,7 @@ public class Entrada extends PanacheEntityBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventarioid")
+    @JsonbTransient
     private Inventario inventario;
 
     @Column(name = "tipoEntrada")
@@ -38,7 +40,7 @@ public class Entrada extends PanacheEntityBase {
 	private LocalDate dataEntrada;
 
     @Column(name = "quantidade")
-    private Long quantidade;
+    private Integer quantidade;
 
     @Column(name = "termoRecebimento")
     private String termoRecebimento;
@@ -92,11 +94,11 @@ public class Entrada extends PanacheEntityBase {
         this.dataEntrada = dataEntrada;
     }
 
-    public Long getQuantidade() {
+    public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Long quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 

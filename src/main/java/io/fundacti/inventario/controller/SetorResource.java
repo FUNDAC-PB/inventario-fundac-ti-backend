@@ -49,7 +49,7 @@ public class SetorResource {
 
     @PUT
     @Path("/{id}")
-   // @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response updateItem(@PathParam("id") Long id, SetorDTO setorRequest) {
         Optional<Setor> updatedSetor = setorService.updateItem(id, setorRequest);
         return updatedSetor.map(setor -> Response.ok(setor).build())
@@ -58,7 +58,7 @@ public class SetorResource {
 
     @DELETE
     @Path("/{id}")
-   // @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response deleteItem(@PathParam("id") Long id) {
         boolean deleted = setorService.deleteItem(id);
         if (deleted) {
@@ -71,7 +71,7 @@ public class SetorResource {
 
     @GET
     @Path("/search/setor/{nome}")
-   // @RolesAllowed("user,admin")
+    @RolesAllowed("user,admin")
     public Response findByNome(@PathParam("nome") String nome) {
         return Response.ok(setorService.findByNome(nome)).build();
     }
